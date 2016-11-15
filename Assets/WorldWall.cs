@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class WorldFloor : WorldAsset {
+public class WorldWall : WorldAsset
+{
 
     public override void OnStart()
     {
@@ -21,10 +22,12 @@ public class WorldFloor : WorldAsset {
         }
         foreach (EditableWorldObject t in editingObjects)
             t.GetComponent<MeshRenderer>().material = mat;
-            
+
     }
     public void SetCorners(bool front, bool back, bool right, bool left)
     {
+        print("SetCorners" + front + back + right + left);
+
         editingObjects[0].SetState(front);
         editingObjects[1].SetState(back);
         editingObjects[2].SetState(right);

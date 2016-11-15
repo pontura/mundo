@@ -5,7 +5,7 @@ public static class Events
 {
     public static System.Action ResetApp = delegate { };
     
-    public static System.Action<bool> OnEditmode = delegate { };
+    public static System.Action<WorldCreator.EditingType> OnEditmode = delegate { };
 
     public static System.Action<string> GotoTo = delegate { };
     public static System.Action<string> GotoBackTo = delegate { };

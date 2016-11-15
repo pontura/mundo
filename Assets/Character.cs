@@ -40,10 +40,10 @@ public class Character : MonoBehaviour
     {
         RaycastHit hit;
         Ray ray = eyesCamera.ScreenPointToRay(Input.mousePosition);
-
+        
         if (Physics.Raycast(ray, out hit))
         {
-            if (Data.Instance.state == Data.states.MOVING)
+            if (World.Instance.creator.editingType== WorldCreator.EditingType.NONE)
             {
                 if (hit.transform.gameObject.GetComponent<WorldFloor>())
                     moveToTarget.SetOn(hit.point);

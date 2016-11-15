@@ -14,27 +14,26 @@ public class WorldPlane : MonoBehaviour {
         FLOOR
     }
     public Material material;
-    public Material editingMaterial;
+    public Material editingMaterialFloor;
+    public Material editingMaterialWalls;
     public MeshRenderer outPlane;
     public MeshRenderer inPlane;
 
-    public void SetMaterials(Material material, Material editingMaterial)
+    public void SwitchMode(WorldCreator.EditingType type)
     {
-        this.material = material;
-        this.editingMaterial = editingMaterial;
-        SwitchMode(Data.Instance.state);
-    }
-    public void SwitchMode(Data.states state)
-    {
-        switch(state)
+        switch (type)
         {
-            case Data.states.EDITING:
-                inPlane.enabled = false;
-                outPlane.material = editingMaterial;
-                break;
-            case Data.states.MOVING:
+            case WorldCreator.EditingType.NONE:
                 inPlane.enabled = true;
                 outPlane.material = material;
+                break;
+            case WorldCreator.EditingType.FLOORS:
+                inPlane.enabled = false;
+                outPlane.material = editingMaterialFloor;
+                break;
+            case WorldCreator.EditingType.WALLS:
+                inPlane.enabled = false;
+                outPlane.material = editingMaterialWalls;
                 break;
         }
     }

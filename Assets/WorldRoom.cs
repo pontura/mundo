@@ -9,18 +9,14 @@ public class WorldRoom : WorldAsset {
 
     public override void OnStart()
     {
-        OnEditModeDone(true);
-        foreach (WorldPlane plane in planes)
-        {
-            plane.SetMaterials(defaultPlaneMaterial, editorMaterial);
-        }
+        OnEditModeDone(WorldCreator.EditingType.NONE);
+        OnEditModeDone(World.Instance.creator.editingType);
     }
-    public override void OnEditModeDone(bool isEditing)
+    public override void OnEditModeDone(WorldCreator.EditingType type)
     {
-        Data.states dataState = Data.Instance.state;
         foreach (WorldPlane plane in planes)
         {
-            plane.SwitchMode(dataState);
+            plane.SwitchMode(type);
         }
     }
 

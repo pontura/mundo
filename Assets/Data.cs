@@ -11,14 +11,6 @@ public class Data : MonoBehaviour
     public bool DEBUG;
     public string lastScene;
     public string newScene;
-    private float time_ViewingMap = 7.5f;
-
-    public states state;
-    public enum states
-    {
-        MOVING,
-        EDITING
-    }
 
     public static Data Instance
     {

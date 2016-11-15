@@ -3,7 +3,10 @@ using System.Collections;
 
 public class WorldAsset : MonoBehaviour {
 
-    public Transform[] editingObjects;
+    public Material editingFloorMaterial;
+    public Material editingWallMaterial;
+
+    public EditableWorldObject[] editingObjects;
 
     void Start()
     {
@@ -14,17 +17,17 @@ public class WorldAsset : MonoBehaviour {
     {
         Events.OnEditmode -= OnEditmode;
     }
-    void OnEditmode(bool isEditor)
+    void OnEditmode(WorldCreator.EditingType type)
     {
-        if (isEditor)
-            foreach (Transform t in editingObjects)
+        if (type != WorldCreator.EditingType.NONE)
+            foreach (EditableWorldObject t in editingObjects)
                 t.gameObject.SetActive(true);
         else
-            foreach (Transform t in editingObjects)
+            foreach (EditableWorldObject t in editingObjects)
                 t.gameObject.SetActive(false);
 
-        OnEditModeDone(isEditor);
+        OnEditModeDone(type);
     }
     public virtual void OnStart() { }
-    public virtual void OnEditModeDone(bool isEditor) { }
+    public virtual void OnEditModeDone(WorldCreator.EditingType type) { }
 }
