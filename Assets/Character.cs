@@ -26,6 +26,14 @@ public class Character : MonoBehaviour
         Events.ClickedOnScreen -= ClickedOnScreen;
         Events.OnDragging -= OnDragging;
     }
+    void Update()
+    {
+        if(transform.localPosition.y<-10)
+        {
+            transform.localPosition = new Vector3(0, 1, 0);
+            Idle();
+        }
+    }
     void OnDragging(bool dragging)
     {
         if (dragging)
@@ -36,22 +44,48 @@ public class Character : MonoBehaviour
         else
             rotateByDrag.SetOff();
     }
+    void OnCollisionEnter(Collision other)
+    {
+        if (other.collider.transform.gameObject.GetComponent<WorldWall>())
+            Idle();
+    }
+    void Idle()
+    {
+        moveToTarget.SetOff();
+    }
     void ClickedOnScreen()
     {
-        RaycastHit hit;
         Ray ray = eyesCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit[] hits;
+        hits = Physics.RaycastAll(ray.origin, ray.direction, 10f);
         
-        if (Physics.Raycast(ray, out hit))
+        for (int i = 0; i < hits.Length; i++)
         {
-            if (World.Instance.creator.editingType== WorldCreator.EditingType.NONE)
+            RaycastHit hit = hits[i];
+            switch(World.Instance.creator.editingType)
             {
-                if (hit.transform.gameObject.GetComponent<WorldFloor>())
-                    moveToTarget.SetOn(hit.point);
+                case WorldCreator.EditingType.NONE:
+                    if (hit.transform.gameObject.GetComponent<WorldFloor>())
+                    {
+                        moveToTarget.SetOn(hit.point);
+                        return;
+                    }
+                    break;
+                case WorldCreator.EditingType.FLOORS:
+                    if(hit.transform.gameObject.name == "floor_corner")
+                    {
+                        Events.OnEditorRaycastHit(hit.transform);
+                        return;
+                    }
+                    break;
+                case WorldCreator.EditingType.WALLS:
+                    if (hit.transform.gameObject.name == "floor_corner" || hit.transform.gameObject.name == "wall_corner")
+                    {
+                        Events.OnEditorRaycastHit(hit.transform);
+                        return;
+                    }
+                    break;
             }
-            else
-            {
-                Events.OnEditorRaycastHit(hit.transform);
-            }  
-        }            
+        }         
     }
 }

@@ -43,6 +43,7 @@ public class WorldCreator : MonoBehaviour {
     }
     void OnEditorRaycastHit(Transform t)
     {
+        print(t);
         if (t.gameObject.GetComponent<PlatformEditor>())
         {
             PlatformEditor platformEditor = t.gameObject.GetComponent<PlatformEditor>();
@@ -71,7 +72,6 @@ public class WorldCreator : MonoBehaviour {
     void CheckToCreateFloor(WorldFloor worldFloor, PlatformEditor platformEditor)
     {
         Vector3 pos = worldFloor.transform.position;
-        print(pos);
         switch (platformEditor.part)
         {
             case PlatformEditor.parts.FRONT: pos.z += 3; break;
@@ -100,7 +100,6 @@ public class WorldCreator : MonoBehaviour {
             {
                 if (Vector3.Distance(wordAsset.transform.localPosition, pos) < 1)
                 {
-                    print("Z" + exception.transform.localPosition + " " +  wordAsset.transform.localPosition);
                     return true;
                 }
             }  
