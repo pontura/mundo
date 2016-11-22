@@ -2,10 +2,7 @@
 using System.Collections;
 
 public class WorldAsset : MonoBehaviour {
-
-    public Material editingFloorMaterial;
-    public Material editingWallMaterial;
-
+    
     public EditableWorldObject[] editingObjects;
 
     void Start()
@@ -16,6 +13,18 @@ public class WorldAsset : MonoBehaviour {
     void OnDestroy()
     {
         Events.OnEditmode -= OnEditmode;
+    }
+    public void Init(float timeToCreate)
+    {
+        StartCoroutine(InitCoroutine(timeToCreate));
+    }
+    IEnumerator InitCoroutine(float timeToCreate)
+    {
+        foreach (MeshRenderer mr in GetComponentsInChildren<MeshRenderer>())
+            mr.enabled = false;
+        yield return new WaitForSeconds(timeToCreate);
+        foreach (MeshRenderer mr in GetComponentsInChildren<MeshRenderer>())
+            mr.enabled = true;
     }
     void OnEditmode(WorldCreator.EditingType type)
     {
@@ -52,10 +61,17 @@ public class WorldAsset : MonoBehaviour {
         foreach (MeshRenderer r in GetComponentsInChildren<MeshRenderer>())
         {
             Color color = r.material.color;
+
             if (hitted)
+            {
                 color.a = 0.5f;
+                r.material = World.Instance.creator.defaultMaterial_SeeThrough;
+            }
             else
+            {
                 color.a = 1;
+                r.material = World.Instance.creator.defaultMaterial;
+            }
             r.material.color = color;
         }
     }

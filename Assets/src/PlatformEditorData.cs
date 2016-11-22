@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlatformEditor : EditableWorldObject {
+public class PlatformEditorData : EditableWorldObject {
 
     public parts part;
     public enum parts

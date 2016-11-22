@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class WorldFloor : WorldAsset {
-
+public class WorldWall : WorldAsset
+{
     public override void OnStart()
     {
         Events.OnEditmode += OnEditmode;
@@ -16,18 +16,14 @@ public class WorldFloor : WorldAsset {
         Material mat = null;
         switch (type)
         {
-            case WorldCreator.EditingType.FLOORS: mat = editingFloorMaterial; break;
-            case WorldCreator.EditingType.WALLS: mat = editingWallMaterial; break;
+            case WorldCreator.EditingType.FLOORS: mat = World.Instance.creator.editingFloorMaterial; break;
+            case WorldCreator.EditingType.WALLS: mat = World.Instance.creator.editingWallMaterial; break;
         }
         foreach (EditableWorldObject t in editingObjects)
             t.GetComponent<MeshRenderer>().material = mat;
-            
     }
-    public void SetCorners(bool front, bool back, bool right, bool left)
+    public void SetCorner(PlatformEditorData.parts part)
     {
-        editingObjects[0].SetState(front);
-        editingObjects[1].SetState(back);
-        editingObjects[2].SetState(right);
-        editingObjects[3].SetState(left);
+        editingObjects[0].GetComponent<PlatformEditorData>().part = part;
     }
 }

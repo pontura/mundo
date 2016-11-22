@@ -20,6 +20,9 @@ public class UI : MonoBehaviour {
             case 2:
                 Events.OnEditmode(WorldCreator.EditingType.WALLS);
                 break;
+            case 3:
+                Events.OnEditmode(WorldCreator.EditingType.ELEVATOR);
+                break;
         }
         
     }

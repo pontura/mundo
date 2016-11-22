@@ -85,6 +85,13 @@ public class Character : MonoBehaviour
                         return;
                     }
                     break;
+                case WorldCreator.EditingType.ELEVATOR:
+                    if (hit.transform.gameObject.GetComponent<WorldFloor>())
+                    {
+                        Events.OnEditorRaycastHit(hit.transform);
+                        return;
+                    }
+                    break;
             }
         }         
     }
