@@ -7,7 +7,7 @@ public class WorldCreatorManager : MonoBehaviour {
     [HideInInspector]
     public WorldCreator worldCreator;
 
-    void Start()
+    void Awake()
     {
         worldCreator = GetComponent<WorldCreator>();
     }

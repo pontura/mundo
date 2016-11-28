@@ -3,59 +3,59 @@ using System.Collections;
 
 public class Character : MonoBehaviour
 {
+    public CharacterEyesCamera eyesCamera;  
+    public CharacterActions actions;
+    public CharacterStates states;
 
-    public GameObject eyes;
-    public Camera eyesCamera;
-
-    public MoveToTarget moveToTarget;
-    public RotateByDrag rotateByDrag;
-    public InputManager inputManager;
+    private RotateByDrag rotateByDrag;
 
     void Start()
     {
-        moveToTarget = GetComponent<MoveToTarget>();
-        inputManager = GetComponent<InputManager>();
+        actions = GetComponent<CharacterActions>();
+        states = GetComponent<CharacterStates>();
         rotateByDrag = GetComponent<RotateByDrag>();
 
-        moveToTarget.enabled = false;
+        CameraChangeView(CharacterEyesCamera.states.OUT);
+
         Events.ClickedOnScreen += ClickedOnScreen;
         Events.OnDragging += OnDragging;
+        Events.CameraChangeView += CameraChangeView;
+        Events.OnWalking += OnWalking;
     }
     void OnDestroy()
     {
         Events.ClickedOnScreen -= ClickedOnScreen;
         Events.OnDragging -= OnDragging;
+        Events.CameraChangeView -= CameraChangeView;
+        Events.OnWalking -= OnWalking;
+    }
+    void OnWalking(bool isWalking)
+    {
+        if (isWalking)
+            GetComponent<InputManager>().forward = 1;
+        else GetComponent<InputManager>().forward = 0;
+    }
+    void CameraChangeView(CharacterEyesCamera.states state)
+    {
+        eyesCamera.CameraChangeView(state);
+        rotateByDrag.SetTarget(state);
     }
     void Update()
     {
-        if(transform.localPosition.y<-10)
-        {
-            transform.localPosition = new Vector3(0, 1, 0);
-            Idle();
-        }
+        states.OnUpdate();
     }
     void OnDragging(bool dragging)
     {
-        if (dragging)
-        {
-            moveToTarget.HasDragged();
-            rotateByDrag.SetOn();
-        }
-        else
-            rotateByDrag.SetOff();
+        states.OnDragging(dragging);
     }
     void OnCollisionEnter(Collision other)
     {
         if (other.collider.transform.gameObject.GetComponent<WorldWall>())
-            Idle();
-    }
-    void Idle()
-    {
-        moveToTarget.SetOff();
+            states.StopMoving();
     }
     void ClickedOnScreen()
     {
-        Ray ray = eyesCamera.ScreenPointToRay(Input.mousePosition);
+        Ray ray = eyesCamera.mainCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit[] hits;
         hits = Physics.RaycastAll(ray.origin, ray.direction, 10f);
         
@@ -67,7 +67,7 @@ public class Character : MonoBehaviour
                 case WorldCreator.EditingType.NONE:
                     if (hit.transform.gameObject.GetComponent<WorldFloor>())
                     {
-                        moveToTarget.SetOn(hit.point);
+                        states.ClickedOnScreen(hit);
                         return;
                     }
                     break;

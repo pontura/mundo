@@ -12,7 +12,8 @@ public static class Events
     public static System.Action Back = delegate { };
     public static System.Action ClickedOnScreen = delegate { };
     public static System.Action<bool> OnDragging = delegate { };
-
+    public static System.Action<bool> OnWalking = delegate { };
+    public static System.Action<CharacterEyesCamera.states> CameraChangeView = delegate { };
     //
     public static System.Action<Transform> OnEditorRaycastHit = delegate { };
 }

@@ -13,6 +13,9 @@ public class InputManager : MonoBehaviour {
 
     public Vector3 updateDraggingPosition;
     private Vector3 lastMousePos;
+    private Vector2 dragPosition;
+
+    public int forward;
 
     public enum states
     {
@@ -20,20 +23,48 @@ public class InputManager : MonoBehaviour {
         PRESSING,
         DRAGGING
     }
-
+    bool dragStart;
     void Update()
     {
+        //if (Input.GetKey(KeyCode.Alpha1))
+        //    Events.CameraChangeView(CharacterEyesCamera.states.SUBJECTIVE);
+        //if (Input.GetKey(KeyCode.Alpha2))
+        //    Events.CameraChangeView(CharacterEyesCamera.states.OUT);
+
+        //if (Input.GetKey(KeyCode.UpArrow))
+        //    forward = 1;
+        //else if (Input.GetKey(KeyCode.DownArrow))
+        //    forward = -1;
+        //else
+        //    forward = 0;
+
+
+#if UNITY_ANDROID
+        UpdateDevice();
+#else
         if (Input.GetMouseButtonUp(0))
             Release();
         if (Input.GetMouseButtonDown(0))
             Press();
-        if (state == states.PRESSING)
+#endif
+        if (state == states.PRESSING || state == states.DRAGGING)
         {
-            if (time_start_pressing + 1 > Time.time)
+            if(!dragStart)
                 StartDragging();
-        } else if(state == states.DRAGGING)
+            else
+                UpdateDragging();
+        }            
+    }
+    void UpdateDevice()
+    {
+        if (Input.touchCount > 0)
         {
-            UpdateDragging();
+            dragPosition = Vector2.zero;
+            foreach (Touch t in Input.touches)
+            {
+                if (t.position.x > 250)
+                    dragPosition = t.position;
+            }
         }
     }
     void Press()
@@ -46,6 +77,7 @@ public class InputManager : MonoBehaviour {
     }
     void Release()
     {
+        dragStart = false;
         lastMousePos = Vector3.zero;
         float distance = Vector3.Distance(startPos, Input.mousePosition);
         if (distance < 20) Events.ClickedOnScreen();
@@ -54,13 +86,16 @@ public class InputManager : MonoBehaviour {
     }
     void StartDragging()
     {
-        state = states.DRAGGING;
         Events.OnDragging(true);
+        dragStart = true;
     }
     void UpdateDragging()
-    {
+    {      
         if (lastMousePos != Vector3.zero)
             updateDraggingPosition = lastMousePos - Input.mousePosition;
         lastMousePos = Input.mousePosition;
+
+        if (Vector3.Distance(startPos, lastMousePos) > 10)
+            state = states.DRAGGING;
     }
 }

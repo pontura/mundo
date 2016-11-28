@@ -7,20 +7,20 @@ public class MoveToTarget : MonoBehaviour {
     private float speed = 1.5f;
     private float damping = 1.3f;
     private bool hasDragged;
-    public CharacterModel characterModel;
+    public Character character;
     public Transform cameraTarget;
 
     public void SetOn(Vector3 pos)
     {
         enabled = true;
         ChangeTarget(pos);
-        characterModel.Walk();
+        character.actions.Walk();
     }
     public void SetOff()
     {
         enabled = false;
         hasDragged = false;
-        characterModel.Idle();
+        character.actions.Idle();
     }
     public void HasDragged()
     {
@@ -39,8 +39,8 @@ public class MoveToTarget : MonoBehaviour {
         if (Vector3.Distance(transform.localPosition, target.transform.position) > 0.5f)
         {
             Vector3 newPos = target.transform.position;
-            characterModel.transform.LookAt(newPos);
-            characterModel.transform.localEulerAngles = new Vector3(0,characterModel.transform.localEulerAngles.y, 0);
+            character.actions.model.transform.LookAt(newPos);
+            character.actions.model.transform.localEulerAngles = new Vector3(0, character.actions.model.transform.localEulerAngles.y, 0);
             transform.position = Vector3.MoveTowards(transform.localPosition, target.transform.position, speed * Time.deltaTime);
             if (!hasDragged)
             { 
