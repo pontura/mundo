@@ -39,14 +39,14 @@ public class InputManager : MonoBehaviour {
         //    forward = 0;
 
 
-#if UNITY_ANDROID
+//#if UNITY_ANDROID
         UpdateDevice();
-#else
+//#else
         if (Input.GetMouseButtonUp(0))
             Release();
         if (Input.GetMouseButtonDown(0))
             Press();
-#endif
+//#endif
         if (state == states.PRESSING || state == states.DRAGGING)
         {
             if(!dragStart)
